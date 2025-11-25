@@ -19,7 +19,7 @@ if st.button("בדיקה"):
     if phone.strip() == "":
         st.error("נא להכניס מספר טלפון.")
     else:
-        result = df[df["phone"] == phone.strip()]
+        result = df[df["phone"] == phone]
         if result.empty:
             st.warning("מספר הטלפון לא נמצא במערכת.")
         else:
