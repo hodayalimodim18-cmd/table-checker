@@ -19,9 +19,9 @@ if not csv_path.exists():
 # טעינת הנתונים
 @st.cache_data
 def load_data(path):
-    df = pd.read_csv(path)
-    # ניקוי תווים מיותרים בטבלת הטלפונים
-    df['phone_clean'] = df['phone'].astype(str).str.replace("-", "").str.replace(" ", "")
+    # חובה לקרוא את עמודת הטלפון כמחרוזת כדי לא לאבד את האפס המוביל
+    df = pd.read_csv(path, dtype={"phone": str})
+    df['phone_clean'] = df['phone'].str.replace("-", "").str.replace(" ", "")
     return df
 
 df = load_data(csv_path)
@@ -33,12 +33,9 @@ if st.button("בדיקה"):
     if phone.strip() == "":
         st.error("נא להכניס מספר טלפון.")
     else:
-        # ניקוי קלט המשתמש
         phone_input = phone.strip().replace("-", "").replace(" ", "")
-        
-        # חיפוש
         result = df[df['phone_clean'] == phone_input]
-        
+
         if result.empty:
             st.warning("מספר הטלפון לא נמצא במערכת.")
         else:
