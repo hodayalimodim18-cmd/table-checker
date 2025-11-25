@@ -15,13 +15,9 @@ st.write("הכניסו את מספר הטלפון כפי שנרשם במערכת
 
 phone = st.text_input("מספר טלפון:")
 
-if st.button("בדיקה"):
-    if phone.strip() == "":
-        st.error("נא להכניס מספר טלפון.")
-    else:
-        result = df[df["phone"] == phone]
-        if result.empty:
-            st.warning("מספר הטלפון לא נמצא במערכת.")
-        else:
-            table_num = int(result.iloc[0]["table"])
-            st.success(f"✨ השולחן שלך הוא: **{table_num}**")
+result = df[df["phone"] == phone]
+if result.empty:
+    st.warning("מספר הטלפון לא נמצא במערכת.")
+else:
+    table_num = int(result.iloc[0]["table"])
+    st.success(f"✨ השולחן שלך הוא: **{table_num}**")
