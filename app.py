@@ -19,25 +19,26 @@ if not csv_path.exists():
 # טעינת הנתונים
 @st.cache_data
 def load_data(path):
-    # חובה לקרוא את עמודת הטלפון כמחרוזת כדי לא לאבד את האפס המוביל
     df = pd.read_csv(path, dtype={"phone": str})
     df['phone_clean'] = df['phone'].str.replace("-", "").str.replace(" ", "")
     return df
 
 df = load_data(csv_path)
 
+# יצירת מילון מהיר לחיפוש
+phone_to_data = df.set_index('phone_clean')[['table', 'names']].to_dict('index')
+
 # קלט מהמשתמש
 phone = st.text_input("מספר טלפון:")
 
 if st.button("בדיקה"):
-    if phone.strip() == "":
-        st.error("נא להכניס מספר טלפון.")
+    phone_input = phone.strip().replace("-", "").replace(" ", "")
+    data = phone_to_data.get(phone_input)
+    
+    if data:
+        table_num = data['table']
+        names = data['names']
+        st.success(f"✨ השולחן שלך הוא: **{table_num}**")
+        st.info(f"אנשים שיושבים איתך באותו שולחן: {names}")
     else:
-        phone_input = phone.strip().replace("-", "").replace(" ", "")
-        result = df[df['phone_clean'] == phone_input]
-
-        if result.empty:
-            st.warning("מספר הטלפון לא נמצא במערכת.")
-        else:
-            table_num = int(result.iloc[0]["table"])
-            st.success(f"✨ השולחן שלך הוא: **{table_num}**")
+        st.warning("מספר הטלפון לא נמצא במערכת.")
