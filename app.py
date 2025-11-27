@@ -7,15 +7,8 @@ st.set_page_config(page_title="בדיקת שולחן", page_icon="🍽️", layo
 st.title("🍽️ בדיקת שולחן")
 st.write("בחרו כיצד לחפש: לפי מספר טלפון, לפי שם, או לפי שולחן.")
 
-# טעינת הנתונים
-@st.cache_data
-def load_data(path):
-    df = pd.read_csv(path, dtype={"phone": str})
-    df['phone_clean'] = df['phone'].str.replace("-", "").str.replace(" ", "")
-    df['name_clean'] = df['names'].str.lower().str.strip()
-    return df
+df = pd.read_csv("guests.csv", dtype={"phone": "string"})
 
-df = load_data(csv_path)
 
 # ----------------------------
 # 🔹 בחירת סוג חיפוש
