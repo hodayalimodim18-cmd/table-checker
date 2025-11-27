@@ -7,15 +7,6 @@ st.set_page_config(page_title="בדיקת שולחן", page_icon="🍽️", layo
 st.title("🍽️ בדיקת שולחן")
 st.write("בחרו כיצד לחפש: לפי מספר טלפון, לפי שם, או לפי שולחן.")
 
-# קובץ CSV יחסית למיקום של app.py
-BASE_DIR = Path(__file__).parent
-csv_path = BASE_DIR / "guests.csv"
-
-# בדיקה אם הקובץ קיים
-if not csv_path.exists():
-    st.error(f"קובץ guests.csv לא נמצא בנתיב: {csv_path}")
-    st.stop()
-
 # טעינת הנתונים
 @st.cache_data
 def load_data(path):
@@ -38,11 +29,11 @@ search_type = st.selectbox(
 # 🔹 חיפוש לפי טלפון
 # ----------------------------
 if search_type == "לפי טלפון":
-    phone = st.text_input("הכניסו מספר טלפון:")
+    phone_input = st.text_input("הכניסו מספר טלפון:")
 
     if st.button("בדיקה"):
-        phone_input = phone.strip().replace("-", "").replace(" ", "")
-        row = df[df['phone_clean'] == phone_input]
+        # phone_input = phone.strip().replace("-", "").replace(" ", "")
+        row = df[df['phone'] == phone_input]
 
         if row.empty:
             st.warning("מספר הטלפון לא נמצא.")
@@ -50,27 +41,27 @@ if search_type == "לפי טלפון":
             table_num = row.iloc[0]['table']
             st.success(f"✨ השולחן שלך הוא: **{table_num}**")
 
-            st.info("מי יושב איתך בשולחן:")
-            st.write(", ".join(df[df['table'] == table_num]['names'].tolist()))
+            # st.info("מי יושב איתך בשולחן:")
+            # st.write(", ".join(df[df['table'] == table_num]['names'].tolist()))
 
 # ----------------------------
 # 🔹 חיפוש לפי שם
 # ----------------------------
 elif search_type == "לפי שם":
-    name = st.text_input("הכניסו שם (או חלק ממנו):")
+    name = st.text_input("הכניסו שם מלא:")
 
     if st.button("חיפוש"):
-        name_clean = name.lower().strip()
-        results = df[df['name_clean'].str.contains(name_clean)]
+        # name_clean = name.lower().strip()
+        results = df[df['name'].str.contains(name)]
 
         if results.empty:
             st.warning("לא נמצאו אנשים עם השם הזה.")
-        else:
-            for _, row in results.iterrows():
-                st.success(f"✨ {row['names']} — שולחן **{row['table']}**")
+        # else:
+        #     for _, row in results.iterrows():
+        #         st.success(f"✨ {row['names']} — שולחן **{row['table']}**")
                 
-                st.info("מי יושב איתו/ה:")
-                st.write(", ".join(df[df['table'] == row['table']]['names'].tolist()))
+                # st.info("מי יושב איתו/ה:")
+                # st.write(", ".join(df[df['table'] == row['table']]['names'].tolist()))
 
 # ----------------------------
 # 🔹 פילטור לפי שולחן
