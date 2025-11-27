@@ -29,6 +29,14 @@ search_type = st.selectbox(
 # 🔹 חיפוש לפי טלפון
 # ----------------------------
 if search_type == "לפי טלפון":
+    df['phone'] = (
+    df['phone']
+    .astype(str)
+    .str.replace(" ", "")
+    .str.replace("-", "")
+    .str.strip()
+)
+
     phone_input = st.text_input("הכניסו מספר טלפון:")
 
     if st.button("בדיקה"):
